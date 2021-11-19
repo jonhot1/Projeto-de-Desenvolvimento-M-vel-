@@ -1,0 +1,71 @@
+select * from repairs
+order by repair_date;
+--Ver reparações anteriores
+
+select person_name from people, mechanics
+where mechanic_person_id=person_id and mechanic_person_id=2;
+--Login de utilizador
+
+
+select brand_name from brands
+order by brand_name;
+--Escolha da marca
+
+select model_name from models
+where model_brand_id=1
+order by model_name;
+--Escolha da modelos
+
+select * from model_engine;
+--Escolha da motor
+
+select * from cars
+where car_client_id=1
+order by car_year;
+--Ver carros
+
+select type_repair_name from type_repair;
+--Mostrar as reparaçoes possiveis
+
+select repair_date,repair_price from repairs;
+--Mostrar o preço e data
+
+select model_engine_engine_id from model_engine,cars,repairs
+where repair_car_id = car_id and car_model_engine_id=model_engine_engine_id;
+--Ainda nao sei bem o que e isto
+
+
+select  person_name, mechanic_experience from people, mechanics
+where mechanic_person_id = person_id and mechanic_id =1 and mechanic_availability=true or mechanic_id=3;
+--mostrar os mecanicos disponiveis
+
+select distinct message_id, message_text, message_date from messages, mechanics, clients
+where message_person_id=mechanic_person_id and mechanic_id=1 or message_person_id=client_person_id and client_id=1
+order by message_id;
+--Mostrar todas a mensagens entre o utilizador e o mecanico
+
+select review_comment,review_stars from reviews,clients
+where review_client_id = client_id and client_id= 1;
+--Mostrar a review deixada
+
+------------------------------------------------Mechanic-----------------------------
+
+select person_name from mechanics, people
+where mechanic_person_id = person_id and mechanic_id=1;
+--login
+
+select mechanic_availability from mechanics
+where mechanic_id= 1 and mechanic_availability= true;
+--Escolher a availability
+
+select brand_name, car_year, model_name, engine_name from engines, models, brands, cars, clients,people,model_engine
+where client_person_id=person_id and client_id=1 and car_client_id=client_id and car_model_engine_id=model_engine_id and model_engine_engine_id=engine_id
+and model_id=model_engine_model_id and  model_brand_id=brand_id;
+--toda a informacao sobre o veiculo sera mostrada ao mecanico
+
+select distinct message_id, message_text, message_date from messages, mechanics, clients
+where message_person_id=mechanic_person_id and mechanic_id=1 or message_person_id=client_person_id and client_id=1
+order by message_id;
+--Mostrar todas a mensagens entre o utilizador e o mecanico
+
+
