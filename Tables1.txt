@@ -1,0 +1,247 @@
+create table people
+(
+    person_id           serial
+        constraint person_pk
+            primary key,
+    person_name         varchar(69) not null,
+    person_phone_number varchar(69),
+    person_email        varchar(69),
+    person_password     varchar(69),
+    person_is_mechanic  boolean default false
+);
+
+alter table people
+    owner to wrhxbihfyotdzm;
+
+create table mechanics
+(
+    mechanic_id           serial
+        constraint mechanics_pk
+            primary key,
+    mechanic_person_id    integer               not null
+        constraint mechanics_people_person_id_fk
+            references people,
+    mechanic_experience   integer,
+    mechanic_about_me     varchar(69),
+    mechanic_availability boolean default false not null
+);
+
+alter table mechanics
+    owner to wrhxbihfyotdzm;
+
+create table clients
+(
+    client_id        serial
+        constraint clients_pk
+            primary key,
+    client_person_id integer not null
+        constraint clients_people_person_id_fk
+            references people,
+    client_nif       varchar(69)
+);
+
+alter table clients
+    owner to wrhxbihfyotdzm;
+
+create table messages
+(
+    message_id        serial
+        constraint messages_pk
+            primary key,
+    message_text      varchar(420) not null,
+    message_person_id integer      not null
+        constraint messages_people_person_id_fk
+            references people,
+    message_timestamp timestamp
+);
+
+alter table messages
+    owner to wrhxbihfyotdzm;
+
+create table type_photo
+(
+    type_photo_id serial
+        constraint type_photo_pk
+            primary key,
+    type_photo    varchar(69)
+);
+
+alter table type_photo
+    owner to wrhxbihfyotdzm;
+
+create table engines
+(
+    engine_id           serial
+        constraint engines_pk
+            primary key,
+    engine_name         varchar(69),
+    engine_oil          varchar(69),
+    engine_displacement varchar(69)
+);
+
+alter table engines
+    owner to wrhxbihfyotdzm;
+
+create table brands
+(
+    brand_id   serial
+        constraint brands_pk
+            primary key,
+    brand_name varchar(69)
+);
+
+alter table brands
+    owner to wrhxbihfyotdzm;
+
+create table models
+(
+    model_id       serial
+        constraint models_pk
+            primary key,
+    model_name     varchar(69),
+    model_brand_id integer
+        constraint models_brands_brand_id_fk
+            references brands
+);
+
+alter table models
+    owner to wrhxbihfyotdzm;
+
+create table model_engine
+(
+    model_engine_id        serial
+        constraint model_engine_pk
+            primary key,
+    model_engine_engine_id integer
+        constraint model_engine_engines_engine_id_fk
+            references engines,
+    model_engine_model_id  integer
+        constraint model_engine_models_model_id_fk
+            references models
+);
+
+alter table model_engine
+    owner to wrhxbihfyotdzm;
+
+create table cars
+(
+    car_id            serial
+        constraint cars_pk
+            primary key,
+    car_license_plate varchar(8),
+    car_year          integer not null,
+    car_model_id      integer
+        constraint cars_models_model_id_fk
+            references models,
+    car_photo_id      integer,
+    car_transmission  varchar(69),
+    car_information   varchar(420),
+    car_fuel          varchar(8),
+    car_brand_id      integer
+        constraint cars_brands_brand_id_fk
+            references brands,
+    car_engine_id     integer
+        constraint cars_model_engine_model_engine_id_fk
+            references model_engine,
+    car_client_id     integer
+        constraint cars_clients_client_id_fk
+            references clients
+);
+
+alter table cars
+    owner to wrhxbihfyotdzm;
+
+create table repairs
+(
+    repair_id          serial
+        constraint repairs_pk
+            primary key,
+    repair_date        date,
+    repair_price       varchar(69),
+    repair_mechanic_id integer
+        constraint repairs_mechanics_mechanic_id_fk
+            references mechanics,
+    repair_car_id      integer
+        constraint repairs_cars_car_id_fk
+            references cars
+);
+
+alter table repairs
+    owner to wrhxbihfyotdzm;
+
+create table reviews
+(
+    review_id        serial
+        constraint reviews_pk
+            primary key,
+    review_comment   varchar(420),
+    review_stars     integer,
+    review_client_id integer
+        constraint reviews_clients_client_id_fk
+            references clients,
+    review_repair_id integer
+        constraint reviews_repairs_repair_id_fk
+            references repairs
+);
+
+alter table reviews
+    owner to wrhxbihfyotdzm;
+
+create table type_repair
+(
+    type_repair_id   serial
+        constraint type_repair_pk
+            primary key,
+    type_repair_name varchar(69)
+);
+
+alter table type_repair
+    owner to wrhxbihfyotdzm;
+
+create table mechanic_abilities
+(
+    mechanic_abilities_id             serial
+        constraint mechanic_abilities_pk
+            primary key,
+    mechanic_abilities_mechanic_id    integer
+        constraint mechanic_abilities_mechanics_mechanic_id_fk
+            references mechanics,
+    mechanic_abilities_type_repair_id integer
+        constraint mechanic_abilities_type_repair_type_repair_id_fk
+            references type_repair
+);
+
+alter table mechanic_abilities
+    owner to wrhxbihfyotdzm;
+
+create table type_repair_repair
+(
+    type_repair_repair_id             serial
+        constraint type_repair_repair_pk
+            primary key,
+    type_repair_repair_type_repair_id integer
+        constraint type_repair_repair_type_repair_type_repair_id_fk
+            references type_repair,
+    type_repair_repair_repair_id      integer
+        constraint type_repair_repair_repairs_repair_id_fk
+            references repairs
+);
+
+alter table type_repair_repair
+    owner to wrhxbihfyotdzm;
+
+create table prices
+(
+    price_id             serial
+        constraint prices_pk
+            primary key,
+    price_model_id       integer,
+    price_type_repair_id integer
+        constraint prices_type_repair_type_repair_id_fk
+            references type_repair,
+    price_price          double precision
+);
+
+alter table prices
+    owner to wrhxbihfyotdzm;
+
