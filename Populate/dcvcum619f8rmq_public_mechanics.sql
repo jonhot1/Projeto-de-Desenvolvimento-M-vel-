@@ -1,1 +1,0 @@
-INSERT INTO public.mechanics (mechanic_id, mechanic_person_id, mechanic_experience, mechanic_about_me, mechanic_availability) VALUES (1, 3, null, 'about me', true);
